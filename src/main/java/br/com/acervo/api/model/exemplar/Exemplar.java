@@ -14,7 +14,7 @@ import lombok.*;
 public class Exemplar {
 
   @Id 
-   @GeneratedValue(strategy = GenerationType.IDENTITY)
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Integer id;
   private Livro id_livro;
   private String tombo;

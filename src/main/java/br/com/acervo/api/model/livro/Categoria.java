@@ -1,0 +1,37 @@
+package br.com.acervo.api.model.livro;
+
+public enum Categoria {
+    FANTASIA,
+    CLASSICO,
+    TERROR,
+    ROMANCE,
+    FICCAO,
+    AVENTURA,
+    INFANTIL,
+    BIOGRAFIA,
+    DRAMA,
+    ENSAIO,
+    NAOFICCAO,
+    INFANTOJUVENIL,
+    POLICIAL,
+    RELIGIAO,
+    FILOSOFIA,
+    MATEMATICA,
+    PORTUGUES,
+    GEOGRAFIA,
+    SOCIOLOGIA,
+    ESPORTE,
+    ARTE,
+    BESTSELLER,
+    HISTORIA,
+    IDIOMA,
+    PECA,
+    QUIMICA,
+    FISICA,
+    BIOLOGIA,
+    TECNOLOGIA, 
+    DIDATICO,
+    CONCURSOPUBLICO,
+    MUSICA
+
+}

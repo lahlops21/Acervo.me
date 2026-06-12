@@ -3,6 +3,7 @@ target/
 .mvn/wrapper/maven-wrapper.jar
 !**/src/main/**/target/
 !**/src/test/**/target/
+aplication.properties
 
 ### STS ###
 .apt_generated
@@ -31,3 +32,36 @@ build/
 
 ### VS Code ###
 .vscode/
+
+
+
+# Compilação e Build
+target/
+build/
+.gradle/
+
+# Arquivos de Dependências
+*.jar
+*.war
+*.class
+
+# Pastas e Configurações de IDEs
+.idea/
+.project
+.classpath
+.settings/
+.vscode/
+*.iml
+*.iws
+
+# Logs e arquivos temporários
+logs/
+*.log
+*.tmp
+*.swp
+.DS_Store
+
+# Variáveis de ambiente e credenciais (MUITO IMPORTANTE!)
+.env
+application.properties
+application.yml

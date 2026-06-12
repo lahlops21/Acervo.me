@@ -1,5 +1,6 @@
 package br.com.acervo.api.model.emprestimo;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import br.com.acervo.api.model.administrador.Administrador;
 import br.com.acervo.api.model.exemplar.Exemplar;
@@ -18,12 +19,34 @@ public class Emprestimo {
   
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
+  @Column(name = "id_emprestimo")
   private Integer id;
-  private Usuario id_usuario;
-  private Exemplar id_exemplar;
-  private Administrador id_administrador;
-  private LocalDateTime data_emprestimo; 
-  private LocalDateTime data_prevista; 
-  private LocalDateTime data_real; 
+  
+  // Muitos empréstimos podem ser feitos por UM usuário
+  @ManyToOne
+  @JoinColumn(name = "id_usuario")
+  private Usuario usuario;
+  
+  // Muitos empréstimos podem referenciar o mesmo exemplar físico (em datas diferentes)
+  @ManyToOne
+  @JoinColumn(name = "id_exemplar") // Nome da coluna FK no banco
+  private Exemplar exemplar;
+
+  // Muitos empréstimos podem ser feitos pelo mesmo administrador
+  @ManyToOne
+  @JoinColumn(name = "id_admin") // Nome da coluna FK no banco
+  private Administrador administrador;
+  
+  @Column(name = "data_emprestimo")
+  private LocalDateTime dataEmprestimo; 
+  
+  @Column(name = "data_devolucao_prevista")
+  private LocalDate dataDevolucaoPrevista; 
+
+  @Column(name = "data_devolucao_real")
+  private LocalDate dataDevolucaoReal;
+  
+  @Enumerated(EnumType.STRING)
+  private StatusEmprestimo status;
   
 }
