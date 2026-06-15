@@ -1,13 +1,12 @@
 package br.com.acervo.api.model.livro;
 
-import java.sql.Date;
-import java.time.LocalDateTime;
 
+import br.com.acervo.api.model.exemplar.DadosCadastroNovoExemplar;
 import jakarta.persistence.*;
 import lombok.*;
 
 @Entity
-@Table(name = "livros")
+@Table(name = "Livro")
 @Getter
 @Setter
 @AllArgsConstructor
@@ -16,13 +15,28 @@ import lombok.*;
 public class Livro {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
+  @Column(name = "id_livro")
   private Integer id;
+  
+  @Column(name = "isbn")
   private String isbn;
+
+  @Column(name = "titulo")
   private String titulo;
+
+  @Column(name = "editora")
   private String editora;
-  private LocalDateTime ano_publicacao;
-  @Column(columnDefinition = "TEXT")
+
+  @Column(name = "ano_publicacao")
+  private String anoPublicacao;
+
+  
+  @Column(name = "sinopse", columnDefinition = "TEXT")
   private String sinopse;
+
+  @Lob
+  @Column(name = "url_capa", columnDefinition = "LONGBLOB") // LONGBLOB garante espaço para imagens maiores
+  private byte[] urlCapa;
 
 
   public Livro(DadosCadastroLivro dados){
@@ -30,9 +44,22 @@ public class Livro {
     this.isbn = dados.isbn();
     this.titulo = dados.titulo();
     this.editora = dados.editora();
-    this.ano_publicacao = dados.ano_publicacao();
+    this.anoPublicacao = dados.anoPublicacao();
     this.sinopse = dados.sinopse();
+    this.urlCapa = dados.urlCapa();
 
   }
+
+  // Novo construtor para o fluxo inteligente de conferência de ISBN
+public Livro(DadosCadastroNovoExemplar dados) {
+    this.isbn = dados.isbn();
+    this.titulo = dados.titulo();
+    this.editora = dados.editora();
+    this.anoPublicacao = dados.anoPublicacao();
+    this.sinopse = dados.sinopse();
+    // capa?
+    this.urlCapa = dados.urlCapa();
+
+}
 
 }

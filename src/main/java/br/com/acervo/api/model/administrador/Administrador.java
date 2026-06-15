@@ -5,7 +5,7 @@ import lombok.*;
 
 
 @Entity
-@Table(name = "administradores")
+@Table(name = "Administrador")
 @Getter
 @Setter
 @AllArgsConstructor
@@ -21,4 +21,11 @@ public class Administrador {
   private String email;
   @Column(name = "senha_hash")
   private String senhaHash;
+
+  public Administrador(DadosCadastroAdministrador dados) {
+    this.nome = dados.nome();
+    this.email = dados.email();
+    // Usar um BCrypt para transformar a senha pura em Hash
+    this.senhaHash = dados.senhaRaw(); 
+}
 }

@@ -5,7 +5,7 @@ import jakarta.persistence.*;
 import lombok.*;
 
 @Entity
-@Table(name = "exemplares")
+@Table(name = "Exemplar")
 @Getter
 @Setter
 @AllArgsConstructor
@@ -15,9 +15,18 @@ public class Exemplar {
 
   @Id 
   @GeneratedValue(strategy = GenerationType.IDENTITY)
+  @Column(name = "id_exemplar")
   private Integer id;
-  private Livro id_livro;
+  
+  @ManyToOne
+  @JoinColumn(name = "id_livro")
+  private Livro livro;
+  
+  @Column(name = "numero_tombo")
   private String tombo;
-  private StatusLivro status;
+  
+  @Enumerated(EnumType.STRING)
+  @Column(name = "status")
+  private StatusLivro status = StatusLivro.DISPONIVEL;
 
 }

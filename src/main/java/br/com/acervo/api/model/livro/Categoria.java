@@ -33,5 +33,4 @@ public enum Categoria {
     DIDATICO,
     CONCURSOPUBLICO,
     MUSICA
-
 }

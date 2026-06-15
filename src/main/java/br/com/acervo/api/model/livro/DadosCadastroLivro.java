@@ -1,6 +1,6 @@
 package br.com.acervo.api.model.livro;
 
-import java.time.LocalDateTime;
+
 
 public record DadosCadastroLivro(
 
@@ -8,8 +8,9 @@ public record DadosCadastroLivro(
    String isbn,
    String titulo,
    String editora,
-   LocalDateTime ano_publicacao,
-   String sinopse
+   String anoPublicacao,
+   String sinopse,
+   byte[] urlCapa
 
 ) {
   
