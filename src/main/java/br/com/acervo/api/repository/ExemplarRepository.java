@@ -1,5 +1,8 @@
 package br.com.acervo.api.repository;
 
-public interface ExemplarRepository {
+import org.springframework.data.jpa.repository.JpaRepository;
+import br.com.acervo.api.model.exemplar.Exemplar;
+
+public interface ExemplarRepository extends JpaRepository<Exemplar, Integer>{
   
 }

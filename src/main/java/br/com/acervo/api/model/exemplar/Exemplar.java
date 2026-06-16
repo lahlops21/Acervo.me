@@ -29,4 +29,9 @@ public class Exemplar {
   @Column(name = "status")
   private StatusLivro status = StatusLivro.DISPONIVEL;
 
+  // Construtor para criar a cópia física a partir do DTO unificado
+public Exemplar(Livro livroAtribuido) {
+    this.status = StatusLivro.DISPONIVEL; // Todo livro novo chega disponível
+    this.livro = livroAtribuido; // Vincula ao livro (seja o criado agora ou o que já existia)
+}
 }

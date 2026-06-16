@@ -1,23 +1,24 @@
 package br.com.acervo.api.controller;
 
-
+import br.com.acervo.api.model.exemplar.DadosCadastroNovoExemplar;
+import br.com.acervo.api.model.exemplar.Exemplar;
+import br.com.acervo.api.service.ExemplarService;
+import jakarta.validation.Valid;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-
-@RestController // Spring Web - Informa para o Spring Boot que a classe é um controller(GET/POST/PUT/DELETE) pois não temos front-end. 
-@RequestMapping("medicos") // SPRING WEB - Cria um caminho (end-point) para a classe abaixo
+@RestController
+@RequestMapping("exemplares")
 public class ExemplarController {
-    // métodos -> funções -> ações 
-    //GET 
-    //POST
-    @PostMapping // SPRING WEB - Informa que o método abaixo é do tipo POST (Cadastrar)
-    public void cadastrar(String dados){
 
-        System.out.println(dados);
+    @Autowired
+    private ExemplarService service; // Chama o "cérebro" do fluxo
+
+    @PostMapping
+    public ResponseEntity<String> cadastrarExemplar(@RequestBody @Valid DadosCadastroNovoExemplar dados) {
+        Exemplar novoExemplar = service.cadastrarNovoExemplar(dados);
+        return ResponseEntity.ok("Exemplar cadastrado com sucesso! Tombo: " + novoExemplar.getTombo() + 
+                                 " | Vinculado ao Livro ID: " + novoExemplar.getLivro().getId());
     }
-    
-    //PUT
-    //DELETE 
-    
-
 }

@@ -1,5 +1,8 @@
 package br.com.acervo.api.repository;
 
-public interface UsuarioRepository {
+import org.springframework.data.jpa.repository.JpaRepository;
+import br.com.acervo.api.model.usuario.Usuario;
+
+public interface UsuarioRepository extends JpaRepository<Usuario, Integer> {
   
 }

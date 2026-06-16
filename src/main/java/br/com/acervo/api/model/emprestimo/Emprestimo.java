@@ -9,7 +9,7 @@ import jakarta.persistence.*;
 import lombok.*;
 
 @Entity
-@Table(name = "Emprestimo") 
+@Table(name = "emprestimo") 
 @Getter
 @Setter
 @AllArgsConstructor
@@ -48,23 +48,7 @@ public class Emprestimo {
   
   @Enumerated(EnumType.STRING)
   @Column(name = "status")
-  private StatusEmprestimo status = StatusEmprestimo.ATIVO;
+  private StatusEmprestimo status;
   
 
-// Dentro de Emprestimo.java
-public Emprestimo(DadosCadastroEmprestimo dados) {
-    this.usuario = new Usuario();
-    this.usuario.setId(dados.idUsuario()); // Bate com o idUsuario do record
-
-    this.exemplar = new Exemplar();
-    this.exemplar.setId(dados.idExemplar()); // Bate com o idExemplar do record
-
-    this.administrador = new Administrador();
-    this.administrador.setId(dados.idAdmin()); // Bate com o idAdmin do record
-
-    // O sistema gera o momento exato e o prazo automaticamente!
-    this.dataEmprestimo = LocalDateTime.now();
-    this.dataDevolucaoPrevista = LocalDate.now().plusDays(7);
-    this.status = StatusEmprestimo.ATIVO;
-}
 }

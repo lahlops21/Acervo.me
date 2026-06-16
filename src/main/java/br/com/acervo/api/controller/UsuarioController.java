@@ -1,30 +1,34 @@
 package br.com.acervo.api.controller;
 
+import br.com.acervo.api.model.usuario.Usuario;
+import br.com.acervo.api.model.usuario.DadosCadastroUsuario;
+import br.com.acervo.api.repository.UsuarioRepository;
+import jakarta.transaction.Transactional;
+import jakarta.validation.Valid;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import org.springframework.web.bind.annotation.*;
-import br.com.acervo.api.model.usuario.Usuario;
 
-@RestController // Spring Web - Informa para o Spring Boot que a classe é um controller(GET/POST/PUT/DELETE) pois não temos front-end. 
-@RequestMapping("usuario") // SPRING WEB - Cria um caminho (end-point) para a classe abaixo
+@RestController
+@RequestMapping("usuarios")
 public class UsuarioController {
-    // métodos -> funções -> ações 
-    
-    @PostMapping("/adicionarUsuario") // SPRING WEB - Informa que o método abaixo é do tipo POST
-    public void cadastrarUsuario(String dados){
 
-        System.out.println("Usuario Cadastrado com sucesso" + dados);
-    }
-    
-    @GetMapping("/listarUsuario")
-    public String verUsuario(){ // mudar depois para List
-      return "Usuarios";
-    }
-    
-    // @GetMapping("/obterUsuarioPeloId/{IdUsuario}")
-    // public Usuario obterUsuarioPorId(Integer idusuario){
-    //   return ; 
-    // }
-    
+    @Autowired
+    private UsuarioRepository repository;
 
+    @PostMapping
+    @Transactional
+    public ResponseEntity<String> cadastrar(@RequestBody @Valid DadosCadastroUsuario dados) {
+        var usuario = new Usuario(dados);
+        repository.save(usuario);
+        return ResponseEntity.ok("Usuário cadastrado com sucesso! ID: " + usuario.getId());
+    }
+
+    @GetMapping
+    public ResponseEntity<List<Usuario>> listar() {
+        var lista = repository.findAll();
+        return ResponseEntity.ok(lista);
+    }
 }

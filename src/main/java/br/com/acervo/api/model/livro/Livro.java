@@ -37,6 +37,9 @@ public class Livro {
   @Lob
   @Column(name = "url_capa", columnDefinition = "LONGBLOB") // LONGBLOB garante espaço para imagens maiores
   private byte[] urlCapa;
+  
+@Column(name = "quantidade_exemplares")
+private Integer quantidadeExemplares = 0;
 
 
   public Livro(DadosCadastroLivro dados){
@@ -48,18 +51,9 @@ public class Livro {
     this.sinopse = dados.sinopse();
     this.urlCapa = dados.urlCapa();
 
+
   }
 
-  // Novo construtor para o fluxo inteligente de conferência de ISBN
-public Livro(DadosCadastroNovoExemplar dados) {
-    this.isbn = dados.isbn();
-    this.titulo = dados.titulo();
-    this.editora = dados.editora();
-    this.anoPublicacao = dados.anoPublicacao();
-    this.sinopse = dados.sinopse();
-    // capa?
-    this.urlCapa = dados.urlCapa();
-
-}
+  
 
 }
