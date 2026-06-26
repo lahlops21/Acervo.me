@@ -1,23 +1,30 @@
 package br.com.acervo.api.controller;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import br.com.acervo.api.model.administrador.Administrador;
+import br.com.acervo.api.model.administrador.DadosCadastroAdministrador;
+import br.com.acervo.api.repository.AdministradorRepository;
+import jakarta.transaction.Transactional;
 
-
-@RestController // Spring Web - Informa para o Spring Boot que a classe é um controller(GET/POST/PUT/DELETE) pois não temos front-end. 
-@RequestMapping("administrador") // SPRING WEB - Cria um caminho (end-point) para a classe abaixo
+@RestController 
+@RequestMapping("administradores") 
 public class AdministradorController {
-    // métodos -> funções -> ações 
-    //GET 
-    //POST
-    @PostMapping // SPRING WEB - Informa que o método abaixo é do tipo POST (Cadastrar)
-    public void cadastrar(String dados){
 
-        System.out.println(dados);
+    @Autowired
+    private AdministradorRepository repository; // Injeta o acesso ao banco H2
+
+    @PostMapping 
+    @Transactional
+    public ResponseEntity<String> cadastrar(@RequestBody DadosCadastroAdministrador dados) {
+        // 1. Cria o objeto Administrador passando o Record com os dados do Insomnia
+        var administrador = new Administrador(dados);
+
+        // 2. Salva efetivamente na tabela do banco H2
+        repository.save(administrador);
+
+        // 3. Devolve uma resposta de sucesso para o cliente
+        return ResponseEntity.ok("Administrador cadastrado com sucesso! ID gerado: " + administrador.getId());
     }
-    
-    //PUT
-    //DELETE 
-    
-
 }
-

@@ -9,7 +9,7 @@ import br.com.acervo.api.service.EmprestimoService;
 import jakarta.transaction.Transactional;
 
 @RestController 
-@RequestMapping("emprestimo")
+@RequestMapping("emprestimos")
 public class EmprestimoController {
 
     @Autowired

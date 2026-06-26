@@ -1,6 +1,10 @@
 package br.com.acervo.api.model.livro;
 
 
+import java.util.ArrayList;
+import java.util.List;
+
+import br.com.acervo.api.model.autor.Autor;
 import br.com.acervo.api.model.exemplar.DadosCadastroNovoExemplar;
 import jakarta.persistence.*;
 import lombok.*;
@@ -23,6 +27,14 @@ public class Livro {
 
   @Column(name = "titulo")
   private String titulo;
+
+  @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+  @JoinTable(
+      name = "livro_autor", // Nome da tabela intermediária que o H2 vai criar
+      joinColumns = @JoinColumn(name = "id_livro"), // Coluna que aponta para o Livro
+      inverseJoinColumns = @JoinColumn(name = "id_autor") // Coluna que aponta para o Autor
+  )
+  private List<Autor> autores = new ArrayList<>();
 
   @Column(name = "editora")
   private String editora;
@@ -54,6 +66,13 @@ private Integer quantidadeExemplares = 0;
 
   }
 
+  public void atualizarInformacoes(DadosAtualizacaoLivro dados) {
+    if (dados.titulo() != null) this.titulo = dados.titulo();
+    if (dados.editora() != null) this.editora = dados.editora();
+    if (dados.anoPublicacao() != null) this.anoPublicacao = dados.anoPublicacao();
+    if (dados.sinopse() != null) this.sinopse = dados.sinopse();
+    if (dados.urlCapa() != null) this.urlCapa = dados.urlCapa();
+}
   
 
 }
