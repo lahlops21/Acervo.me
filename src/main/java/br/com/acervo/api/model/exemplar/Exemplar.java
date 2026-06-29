@@ -19,10 +19,10 @@ public class Exemplar {
   private Integer id;
   
   @ManyToOne
-  @JoinColumn(name = "id_livro")
+  @JoinColumn(name = "id_livro", nullable = false)
   private Livro livro;
   
-  @Column(name = "numero_tombo")
+  @Column(name = "numero_tombo", nullable = false, unique = true)
   private String tombo;
   
   @Enumerated(EnumType.STRING)
@@ -30,8 +30,9 @@ public class Exemplar {
   private StatusLivro status = StatusLivro.DISPONIVEL;
 
   // Construtor para criar a cópia física a partir do DTO unificado
-public Exemplar(Livro livroAtribuido) {
+public Exemplar(Livro livroAtribuido, String tomboGerado) {
     this.status = StatusLivro.DISPONIVEL; // Todo livro novo chega disponível
     this.livro = livroAtribuido; // Vincula ao livro (seja o criado agora ou o que já existia)
+    this.tombo = tomboGerado; // 👈 Evita erro de valor nulo no MySQL
 }
 }

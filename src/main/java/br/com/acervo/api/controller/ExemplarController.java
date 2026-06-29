@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("exemplares")
+@CrossOrigin(origins = "*")
 public class ExemplarController {
 
     @Autowired

@@ -9,7 +9,7 @@ import jakarta.persistence.*;
 import lombok.*;
 
 @Entity
-@Table(name = "emprestimo") 
+@Table(name = "Emprestimo") 
 @Getter
 @Setter
 @AllArgsConstructor
@@ -24,31 +24,31 @@ public class Emprestimo {
   
   // Muitos empréstimos podem ser feitos por UM usuário
   @ManyToOne
-  @JoinColumn(name = "id_usuario")
+  @JoinColumn(name = "id_usuario", nullable = false)
   private Usuario usuario;
   
-  // Muitos empréstimos podem referenciar o mesmo exemplar físico (em datas diferentes)
+  // Muitos empréstimos podem referenciar o mesmo exemplar (em datas diferentes)
   @ManyToOne
-  @JoinColumn(name = "id_exemplar") // Nome da coluna FK no banco
+  @JoinColumn(name = "id_exemplar", nullable = false) // Nome da coluna FK no banco
   private Exemplar exemplar;
 
   // Muitos empréstimos podem ser feitos pelo mesmo administrador
   @ManyToOne
-  @JoinColumn(name = "id_admin") // Nome da coluna FK no banco
+  @JoinColumn(name = "id_admin", nullable = false) // Nome da coluna FK no banco
   private Administrador administrador;
   
   @Column(name = "data_emprestimo")
   private LocalDateTime dataEmprestimo; 
   
-  @Column(name = "data_devolucao_prevista")
+  @Column(name = "data_devolucao_prevista", nullable = false)
   private LocalDate dataDevolucaoPrevista; 
 
   @Column(name = "data_devolucao_real")
   private LocalDate dataDevolucaoReal;
   
   @Enumerated(EnumType.STRING)
-  @Column(name = "status")
-  private StatusEmprestimo status;
+  @Column(name = "status", nullable = false)
+  private StatusEmprestimo status = StatusEmprestimo.ATIVO; // Padrão inicial ativo
   
 
 }

@@ -9,7 +9,8 @@ import br.com.acervo.api.repository.AdministradorRepository;
 import jakarta.transaction.Transactional;
 
 @RestController 
-@RequestMapping("administradores") 
+@RequestMapping("administradores")
+@CrossOrigin(origins = "*") 
 public class AdministradorController {
 
     @Autowired
@@ -19,7 +20,7 @@ public class AdministradorController {
     @Transactional
     public ResponseEntity<String> cadastrar(@RequestBody DadosCadastroAdministrador dados) {
         // 1. Cria o objeto Administrador passando o Record com os dados do Insomnia
-        var administrador = new Administrador(dados);
+        var administrador = new Administrador(dados, dados.senhaRaw());
 
         // 2. Salva efetivamente na tabela do banco H2
         repository.save(administrador);

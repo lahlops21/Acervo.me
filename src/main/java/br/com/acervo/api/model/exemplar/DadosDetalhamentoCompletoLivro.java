@@ -14,7 +14,8 @@ public record DadosDetalhamentoCompletoLivro(
     String sinopse,
     byte[] urlCapa,
     Integer quantidadeExemplares,
-    String statusDisponibilidade
+    String statusDisponibilidade,
+    List<String> categorias
 ) {
   // Dentro de DadosDetalhamentoCompletoLivro.java
 
@@ -30,7 +31,8 @@ public DadosDetalhamentoCompletoLivro(Livro livro, Exemplar exemplar, List<Strin
         livro.getSinopse(),
         livro.getUrlCapa(),
         livro.getQuantidadeExemplares(),
-        exemplar.getStatus().toString()
+        exemplar.getStatus().toString(),
+        livro.getCategorias()
     );
 }
 

@@ -70,7 +70,7 @@
     	</dependency>
 	
 		<!-- Responsável pela criação e utilização das anotations do h2  -->
-		<dependency>
+		<!-- <dependency>
 			<groupId>com.h2database</groupId>
 			<artifactId>h2</artifactId>
 			<scope>runtime</scope>
@@ -79,7 +79,13 @@
 		<dependency>
       		<groupId>org.springframework.boot</groupId>
       		<artifactId>spring-boot-h2console</artifactId>
-    	</dependency>
+    	</dependency> -->
+
+		<dependency>
+			<groupId>com.mysql</groupId>
+			<artifactId>mysql-connector-j</artifactId>
+			<scope>runtime</scope>
+		</dependency>
 
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
@@ -106,6 +112,11 @@
 			<version>0.12.3</version>
 			<scope>runtime</scope>
   		</dependency>
+
+			<dependency>
+				<groupId>org.springframework.boot</groupId>
+				<artifactId>spring-boot-starter-security</artifactId>
+			</dependency>
 	</dependencies>
 
 	<build>

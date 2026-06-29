@@ -36,10 +36,10 @@ public class ExemplarService {
         Livro livroAlvo;
         
         if (livroExistente.isPresent()) {
-            // Cenário A: O livro já existe!
+            // Cenário A: O livro já existe
             livroAlvo = livroExistente.get();
         } else {
-            // Cenário B: O livro é inédito! Criamos o registro base dele
+            // Cenário B: O livro é novo-> Cria o registro base dele
             livroAlvo = new Livro();
             livroAlvo.setIsbn(dados.isbn());
             livroAlvo.setTitulo(dados.titulo());

@@ -5,7 +5,10 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import br.com.acervo.api.repository.AutorRepository;
 import br.com.acervo.api.repository.ExemplarRepository;
+import br.com.acervo.api.model.autor.Autor;
 import br.com.acervo.api.model.exemplar.DadosDetalhamentoCompletoLivro;
 import br.com.acervo.api.model.livro.DadosAtualizacaoLivro;
 import br.com.acervo.api.repository.LivroRepository;
@@ -15,6 +18,7 @@ import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping("livros")
+@CrossOrigin(origins = "*")
 public class LivroController {
 
 @Autowired
@@ -23,28 +27,49 @@ private LivroRepository livroRepository;
 @Autowired
 private ExemplarRepository exemplarRepository;
 
+@Autowired
+private AutorRepository autorRepository;
+
 @PutMapping
 @Transactional
 public ResponseEntity<?> atualizar(@RequestBody @Valid DadosAtualizacaoLivro dados) {
-    // 1. Busca o registro existente
     var livro = livroRepository.findById(dados.id())
             .orElseThrow(() -> new IllegalArgumentException("Livro não encontrado"));
     
-    // 2. Modifica os campos com base no que veio no DTO
-    livro.atualizarInformacoes(dados);
+    List<Autor> listaAutoresAtualizada = null;
+
+    // 👈 Aplica sua lógica peculiar: busca ou cria o autor dinamicamente na edição
+    if (dados.autores() != null && !dados.autores().isEmpty()) {
+        listaAutoresAtualizada = new java.util.ArrayList<>();
+        for (var autorInput : dados.autores()) {
+            if (autorInput.nome() != null && !autorInput.nome().trim().isEmpty()) {
+                // Tenta achar pelo nome ignorando espaços extras
+                String nomeFormatado = autorInput.nome().trim();
+                Autor autor = autorRepository.findByNome(nomeFormatado) // Nota: Certifique-se de que o AutorRepository está injetado como 'repository' ou altere o nome aqui
+                        .orElseGet(() -> {
+                            Autor novo = new Autor();
+                            novo.setNome(nomeFormatado);
+                            return autorRepository.save(novo); // Cria e salva dinamicamente se for um autor inédito
+                        });
+                listaAutoresAtualizada.add(autor);
+            }
+        }
+    }
     
-    // 3. Retorna o objeto atualizado e o status 200 OK
+    // Modifica os campos repassando a lista de autores tratada
+    livro.atualizarInformacoes(dados, listaAutoresAtualizada);
+    
     return ResponseEntity.ok(livro);
 }
 
 
     @DeleteMapping("/{id}")
-    @Transactional // 🔴 ESSA ANOTAÇÃO É OBRIGATÓRIA AQUI!
+    @Transactional 
     public ResponseEntity<?> excluir(@PathVariable Integer id) {
         var livro = livroRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Livro não encontrado"));
 
-        // 🌟 A MÁGICA DA EXCLUSÃO DEFINITIVA:
+        // EXCLUSÃO DEFINITIVA:
         // Primeiro, vamos no banco e deletamos todos os exemplares que pertencem a esse livro
         exemplarRepository.deleteByLivro(livro); 
 
@@ -65,13 +90,19 @@ public ResponseEntity<?> atualizar(@RequestBody @Valid DadosAtualizacaoLivro dad
         return ResponseEntity.ok(dadosDetalhados);
     }
 
-    @GetMapping("/pesquisa")
-public ResponseEntity<List<DadosDetalhamentoCompletoLivro>> buscarPorAutor(@RequestParam String autor) {
-    // Exemplo de URL: /livros/pesquisa?autor=Clarice
-    var livros = livroService.pesquisarLivrosPorAutor(autor);
+@GetMapping("/pesquisa")
+public ResponseEntity<List<DadosDetalhamentoCompletoLivro>> buscarLivros(@RequestParam String termo) {
+    // Agora aceita qualquer texto! Ex: /livros/pesquisa?termo=978-85 ou /livros/pesquisa?termo=Cortic%C3%A7o
+    var livros = livroService.pesquisarLivrosGeral(termo);
     return ResponseEntity.ok(livros);
 }
 
+@GetMapping 
+public ResponseEntity<List<DadosDetalhamentoCompletoLivro>> listar() {
+    // Aciona o service para trazer todos os cards de livros formatados
+    var lista = livroService.listarTodosOsLivros();
+    return ResponseEntity.ok(lista);
+}
 }
 
     

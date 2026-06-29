@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController // Spring Web - Informa para o Spring Boot que a classe é um controller(GET/POST/PUT/DELETE) pois não temos front-end. 
 @RequestMapping("notificacao") // SPRING WEB - Cria um caminho (end-point) para a classe abaixo
+@CrossOrigin(origins = "*")
 public class NotificacaoController {
     // métodos -> funções -> ações 
     //GET 
