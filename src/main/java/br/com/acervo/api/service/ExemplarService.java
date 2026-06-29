@@ -4,16 +4,19 @@ import br.com.acervo.api.model.autor.Autor;
 import br.com.acervo.api.model.exemplar.DadosCadastroNovoExemplar;
 import br.com.acervo.api.model.exemplar.DadosDetalhamentoCompletoLivro;
 import br.com.acervo.api.model.exemplar.Exemplar;
+import br.com.acervo.api.model.livro.Categoria;
 import br.com.acervo.api.model.exemplar.StatusLivro;
 import br.com.acervo.api.model.livro.Livro;
 import br.com.acervo.api.repository.AutorRepository;
 import br.com.acervo.api.repository.ExemplarRepository;
 import br.com.acervo.api.repository.LivroRepository;
+import br.com.acervo.api.repository.CategoriaRepository;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import jakarta.transaction.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -28,6 +31,9 @@ public class ExemplarService {
 
     @Autowired
     private AutorRepository autorRepository; 
+
+    @Autowired
+    private CategoriaRepository categoriaRepository;
 
         @Transactional
     public Exemplar cadastrarNovoExemplar(DadosCadastroNovoExemplar dados) {
@@ -48,6 +54,19 @@ public class ExemplarService {
             livroAlvo.setSinopse(dados.sinopse());
             livroAlvo.setUrlCapa(dados.urlCapa());
             livroAlvo.setQuantidadeExemplares(0); 
+            
+            //  Converte List<Integer> em List<Categoria> buscando registros reais no banco
+            if (dados.categorias() != null && !dados.categorias().isEmpty()) {
+                List<Categoria> categoriasCarregadas = new ArrayList<>();
+                for (Integer idCategoria : dados.categorias()) {
+                    Categoria categoriaReal = categoriaRepository.findById(idCategoria)
+                        .orElseThrow(() -> new IllegalArgumentException("Categoria com ID " + idCategoria + " não encontrada no sistema"));
+                    categoriasCarregadas.add(categoriaReal);
+                }
+                livroAlvo.setCategorias(categoriasCarregadas);
+            }
+
+
 
             // PROCESSAMENTO INTELIGENTE DOS AUTORES:
             if (dados.autores() != null && !dados.autores().isEmpty()) {

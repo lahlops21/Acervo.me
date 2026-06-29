@@ -18,15 +18,14 @@ public class EmprestimoController {
     @Autowired
     private EmprestimoService emprestimoService; // Aciona o cérebro do sistema
 
-    @PostMapping 
-    @Transactional
-     public ResponseEntity<?> cadastrar(@RequestBody DadosCadastroEmprestimo dados) {
+   @PostMapping 
+    public ResponseEntity<?> cadastrar(@RequestBody DadosCadastroEmprestimo dados) {
         try {
-            // Executa o empréstimo normalmente no banco MySQL
-            var emprestimo = emprestimoService.abrirEmprestimo(dados);
-            return ResponseEntity.ok(new DadosDetalhamentoEmprestimo(emprestimo));
+        // O Service roda sua própria transação isolada
+        var emprestimo = emprestimoService.abrirEmprestimo(dados);
+        return ResponseEntity.ok(new DadosDetalhamentoEmprestimo(emprestimo));
         } catch (IllegalStateException | IllegalArgumentException e) {
-            // Se o usuário já tiver empréstimo ativo ou o livro estiver alugado, devolve o texto do erro amigável!
+            // Agora sim o catch vai funcionar lindo e vai devolver o texto exato do erro para o React Native!
             return ResponseEntity.badRequest().body(e.getMessage());
         }
     }

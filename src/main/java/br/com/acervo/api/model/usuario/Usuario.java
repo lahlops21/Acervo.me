@@ -103,8 +103,7 @@ public class Usuario implements UserDetails {
 
   @Override
   public boolean isEnabled() {
-      // O usuário só consegue logar se não estiver bloqueado por atrasos graves
-      return this.status == UsuarioStatus.DISPONIVEL;
+      return true; // Deixe o Spring Security dar passagem livre para o usuário autenticado
   }
 }
 

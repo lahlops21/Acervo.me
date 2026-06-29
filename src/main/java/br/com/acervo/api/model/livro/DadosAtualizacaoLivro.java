@@ -13,8 +13,8 @@ public record DadosAtualizacaoLivro(
     String anoPublicacao,
     String sinopse,
     byte[] urlCapa,
-    List<DadosAutorInput> autores,   // 👈 Adicionado para atualizar o Autor
-    List<String> categorias          // 👈 Adicionado para receber as categorias do fron
+    List<DadosAutorInput> autores,   
+    List<Integer> categorias        
 ) {
   
 }

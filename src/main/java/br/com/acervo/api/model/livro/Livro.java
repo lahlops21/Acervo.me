@@ -1,11 +1,8 @@
 package br.com.acervo.api.model.livro;
 
-
 import java.util.ArrayList;
 import java.util.List;
-
 import br.com.acervo.api.model.autor.Autor;
-import br.com.acervo.api.model.exemplar.DadosCadastroNovoExemplar;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -17,6 +14,7 @@ import lombok.*;
 @NoArgsConstructor
 @EqualsAndHashCode(of = "id")
 public class Livro {
+  
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   @Column(name = "id_livro")
@@ -28,17 +26,19 @@ public class Livro {
   @Column(name = "titulo")
   private String titulo;
 
-  // 👈 CORREÇÃO: Alinhado com a tabela intermediária 'Livro_Categoria' do seu script SQL
-  @ElementCollection(fetch = FetchType.EAGER)
-  @CollectionTable(name = "Livro_Categoria", joinColumns = @JoinColumn(name = "id_livro"))
-  @Column(name = "id_categoria") 
-  private List<String> categorias = new ArrayList<>();
+  @ManyToMany
+  @JoinTable(
+      name = "Livro_Categoria",
+      joinColumns = @JoinColumn(name = "id_livro", referencedColumnName = "id_livro"),
+      inverseJoinColumns = @JoinColumn(name = "id_categoria", referencedColumnName = "id_categoria")
+  )
+  private List<Categoria> categorias = new ArrayList<>(); 
 
   @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
   @JoinTable(
-      name = "Livro_Autor", // Nome da tabela intermediária que o H2 vai criar
-      joinColumns = @JoinColumn(name = "id_livro"), // Coluna que aponta para o Livro
-      inverseJoinColumns = @JoinColumn(name = "id_autor") // Coluna que aponta para o Autor
+      name = "Livro_Autor", 
+      joinColumns = @JoinColumn(name = "id_livro"), 
+      inverseJoinColumns = @JoinColumn(name = "id_autor") 
   )
   private List<Autor> autores = new ArrayList<>();
 
@@ -48,7 +48,6 @@ public class Livro {
   @Column(name = "ano_publicacao")
   private String anoPublicacao;
 
-  
   @Column(name = "sinopse", columnDefinition = "TEXT")
   private String sinopse;
 
@@ -56,40 +55,38 @@ public class Livro {
   @Column(name = "url_capa", columnDefinition = "BLOB") 
   private byte[] urlCapa;
   
-@Column(name = "quantidade_exemplares")
-private Integer quantidadeExemplares = 0;
+  @Column(name = "quantidade_exemplares")
+  private Integer quantidadeExemplares = 0;
 
-
-  public Livro(DadosCadastroLivro dados){
-
+  // 🚀 CONSTRUTOR CORRIGIDO: Agora preparado para receber os dados limpos estruturados pelo Service
+  public Livro(DadosCadastroLivro dados) {
     this.isbn = dados.isbn();
     this.titulo = dados.titulo();
     this.editora = dados.editora();
     this.anoPublicacao = dados.anoPublicacao();
     this.sinopse = dados.sinopse();
     this.urlCapa = dados.urlCapa();
-    
-
+    this.quantidadeExemplares = 0;
   }
 
-  
-  public void atualizarInformacoes(DadosAtualizacaoLivro dados, List<Autor> novosAutores) {
+  // 🚀 MÉTODO DE ATUALIZAÇÃO CORRIGIDO: Limpo, sem redundâncias e usando a variável certa (this.categorias)
+  public void atualizarInformacoes(DadosAtualizacaoLivro dados, List<Autor> novosAutores, List<Categoria> novasCategorias) {
     if (dados.titulo() != null) this.titulo = dados.titulo();
     if (dados.editora() != null) this.editora = dados.editora();
     if (dados.anoPublicacao() != null) this.anoPublicacao = dados.anoPublicacao();
     if (dados.sinopse() != null) this.sinopse = dados.sinopse();
     if (dados.urlCapa() != null) this.urlCapa = dados.urlCapa();
-// Se o front enviar autores na edição, substitui a lista antiga
+    
+    // Se o service tratou e enviou novos autores na edição, substitui a lista antiga
     if (novosAutores != null) {
         this.autores.clear();
         this.autores.addAll(novosAutores);
     }
 
-    // Se o front enviar categorias na edição, substitui as antigas
-    if (dados.categorias() != null) {
+    // Se o service tratou e enviou as novas categorias na edição, substitui as antigas
+    if (novasCategorias != null) {
         this.categorias.clear();
-        this.categorias.addAll(dados.categorias());
+        this.categorias.addAll(novasCategorias);
     }
-}
-
+  }
 }

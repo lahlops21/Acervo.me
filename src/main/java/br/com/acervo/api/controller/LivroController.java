@@ -7,6 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import br.com.acervo.api.repository.AutorRepository;
+import br.com.acervo.api.repository.CategoriaRepository;
 import br.com.acervo.api.repository.ExemplarRepository;
 import br.com.acervo.api.model.autor.Autor;
 import br.com.acervo.api.model.exemplar.DadosDetalhamentoCompletoLivro;
@@ -29,6 +30,9 @@ private ExemplarRepository exemplarRepository;
 
 @Autowired
 private AutorRepository autorRepository;
+
+@Autowired
+private CategoriaRepository categoriaRepository;
 
 @PutMapping
 @Transactional
@@ -55,9 +59,21 @@ public ResponseEntity<?> atualizar(@RequestBody @Valid DadosAtualizacaoLivro dad
             }
         }
     }
+
+    //  2. método inteligente de categorias para o dropdown!
+    List<br.com.acervo.api.model.livro.Categoria> listaCategoriasAtualizada = null;
+    if (dados.categorias() != null && !dados.categorias().isEmpty()) {
+        listaCategoriasAtualizada = new java.util.ArrayList<>();
+        for (Integer idCategoria : dados.categorias()) {
+            // Busca a categoria real no banco pelo ID enviado pelo dropdown do Front
+            var categoria = categoriaRepository.findById(idCategoria)
+                    .orElseThrow(() -> new IllegalArgumentException("Categoria com ID " + idCategoria + " não cadastrada no sistema"));
+            listaCategoriasAtualizada.add(categoria);
+        }
+    }
     
-    // Modifica os campos repassando a lista de autores tratada
-    livro.atualizarInformacoes(dados, listaAutoresAtualizada);
+    //  passamos os 3 argumentos esperados pelo método
+    livro.atualizarInformacoes(dados, listaAutoresAtualizada, listaCategoriasAtualizada);
     
     return ResponseEntity.ok(livro);
 }
